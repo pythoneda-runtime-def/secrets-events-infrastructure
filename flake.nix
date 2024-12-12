@@ -1,8 +1,8 @@
 # flake.nix
 #
-# This file packages pythoneda-runtime/secrets-events-infrastructure as a Nix flake.
+# This file packages pythoneda-shared-runtime/secrets-events-infrastructure as a Nix flake.
 #
-# Copyright (C) 2023-today rydnr's pythoneda-runtime-def/secrets-events-infrastructure
+# Copyright (C) 2023-today rydnr's pythoneda-shared-runtime/secrets-events-infrastructure
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,19 +18,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {
   description =
-    "Nix flake for pythoneda-runtime/secrets-events-infrastructure";
+    "Nix flake for pythoneda-shared-runtime/secrets-events-infrastructure";
   inputs = rec {
     flake-utils.url = "github:numtide/flake-utils/v1.0.0";
     nixpkgs.url = "github:NixOS/nixpkgs/24.05";
-    pythoneda-runtime-secrets-events = {
-      inputs.flake-utils.follows = "flake-utils";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.pythoneda-shared-pythonlang-banner.follows =
-        "pythoneda-shared-pythonlang-banner";
-      inputs.pythoneda-shared-pythonlang-domain.follows =
-        "pythoneda-shared-pythonlang-domain";
-      url = "github:pythoneda-runtime-def/secrets-events/0.0.1";
-    };
     pythoneda-shared-pythonlang-banner = {
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -52,20 +43,29 @@
         "pythoneda-shared-pythonlang-domain";
       url = "github:pythoneda-shared-pythonlang-def/infrastructure/0.0.77";
     };
+    pythoneda-shared-runtime-secrets-events = {
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.pythoneda-shared-pythonlang-banner.follows =
+        "pythoneda-shared-pythonlang-banner";
+      inputs.pythoneda-shared-pythonlang-domain.follows =
+        "pythoneda-shared-pythonlang-domain";
+      url = "github:pythoneda-shared-runtime-def/secrets-events/0.0.3";
+    };
   };
   outputs = inputs:
     with inputs;
     flake-utils.lib.eachDefaultSystem (system:
       let
-        org = "pythoneda-runtime";
+        org = "pythoneda-shared-runtime";
         repo = "secrets-events-infrastructure";
-        version = "0.0.1";
-        sha256 = "1lrnhw8yw3pfkayzavgndppnzvhv1jfn3c1dyx4fnr15233xjqzz";
+        version = "0.0.2";
+        sha256 = "1n6x5fczw7xw8k3habb2izmgg7mm6lff51l0yswiqyzw25gf7v4x";
         pname = "${org}-${repo}";
-        pythonpackage = "pythoneda.runtime.secrets.events.infrastructure";
+        pythonpackage = "pythoneda.shared.runtime.secrets.events.infrastructure";
         package = builtins.replaceStrings [ "." ] [ "/" ] pythonpackage;
         description =
-          "Shared kernel for pythoneda-runtime/secrets-events-infrastructure";
+          "Shared kernel for pythoneda-shared-runtime/secrets-events-infrastructure";
         license = pkgs.lib.licenses.gpl3;
         homepage = "https://github.com/${org}/${repo}";
         maintainers = with pkgs.lib.maintainers;
@@ -78,8 +78,8 @@
           builtins.replaceStrings [ "\n" ] [ "" ] "nixpkgs-${nixpkgsVersion}";
         shared = import "${pythoneda-shared-pythonlang-banner}/nix/shared.nix";
         pkgs = import nixpkgs { inherit system; };
-        pythoneda-runtime-secrets-events-infrastructure-for = { python
-          , pythoneda-runtime-secrets-events, pythoneda-shared-pythonlang-domain
+        pythoneda-shared-runtime-secrets-events-infrastructure-for = { python
+          , pythoneda-shared-runtime-secrets-events, pythoneda-shared-pythonlang-domain
           , pythoneda-shared-pythonlang-infrastructure }:
           let
             pnameWithUnderscores =
@@ -100,12 +100,12 @@
               desc = description;
               inherit homepage package pname pythonMajorMinorVersion pythonpackage version;
               dbusNext = python.pkgs.dbus-next.version;
-              pythonedaRuntimeSecretsEvents =
-                pythoneda-runtime-secrets-events.version;
               pythonedaSharedPythonlangDomain =
                 pythoneda-shared-pythonlang-domain.version;
               pythonedaSharedPythonlangInfrastructure =
                 pythoneda-shared-pythonlang-infrastructure.version;
+              pythonedaSharedRuntimeSecretsEvents =
+                pythoneda-shared-runtime-secrets-events.version;
               src = pyprojectTomlTemplate;
             };
             src = pkgs.fetchFromGitHub {
@@ -119,7 +119,7 @@
             nativeBuildInputs = with python.pkgs; [ pip poetry-core ];
             propagatedBuildInputs = with python.pkgs; [
               dbus-next
-              pythoneda-runtime-secrets-events
+              pythoneda-shared-runtime-secrets-events
               pythoneda-shared-pythonlang-domain
               pythoneda-shared-pythonlang-infrastructure
             ];
@@ -152,8 +152,8 @@
       in rec {
         defaultPackage = packages.default;
         devShells = rec {
-          default = pythoneda-runtime-secrets-events-infrastructure-python312;
-          pythoneda-runtime-secrets-events-infrastructure-python39 =
+          default = pythoneda-shared-runtime-secrets-events-infrastructure-python312;
+          pythoneda-shared-runtime-secrets-events-infrastructure-python39 =
             shared.devShell-for {
               banner = "${
                   pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python39
@@ -161,7 +161,7 @@
               extra-namespaces = "";
               nixpkgs-release = nixpkgsRelease;
               package =
-                packages.pythoneda-runtime-secrets-events-infrastructure-python39;
+                packages.pythoneda-shared-runtime-secrets-events-infrastructure-python39;
               python = pkgs.python39;
               pythoneda-shared-pythonlang-banner =
                 pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python39;
@@ -169,7 +169,7 @@
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python39;
               inherit archRole layer org pkgs repo space;
             };
-          pythoneda-runtime-secrets-events-infrastructure-python310 =
+          pythoneda-shared-runtime-secrets-events-infrastructure-python310 =
             shared.devShell-for {
               banner = "${
                   pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python310
@@ -177,7 +177,7 @@
               extra-namespaces = "";
               nixpkgs-release = nixpkgsRelease;
               package =
-                packages.pythoneda-runtime-secrets-events-infrastructure-python310;
+                packages.pythoneda-shared-runtime-secrets-events-infrastructure-python310;
               python = pkgs.python310;
               pythoneda-shared-pythonlang-banner =
                 pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python310;
@@ -185,7 +185,7 @@
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python310;
               inherit archRole layer org pkgs repo space;
             };
-          pythoneda-runtime-secrets-events-infrastructure-python311 =
+          pythoneda-shared-runtime-secrets-events-infrastructure-python311 =
             shared.devShell-for {
               banner = "${
                   pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python311
@@ -193,7 +193,7 @@
               extra-namespaces = "";
               nixpkgs-release = nixpkgsRelease;
               package =
-                packages.pythoneda-runtime-secrets-events-infrastructure-python311;
+                packages.pythoneda-shared-runtime-secrets-events-infrastructure-python311;
               python = pkgs.python311;
               pythoneda-shared-pythonlang-banner =
                 pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python311;
@@ -201,7 +201,7 @@
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python311;
               inherit archRole layer org pkgs repo space;
             };
-          pythoneda-runtime-secrets-events-infrastructure-python312 =
+          pythoneda-shared-runtime-secrets-events-infrastructure-python312 =
             shared.devShell-for {
               banner = "${
                   pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python312
@@ -209,7 +209,7 @@
               extra-namespaces = "";
               nixpkgs-release = nixpkgsRelease;
               package =
-                packages.pythoneda-runtime-secrets-events-infrastructure-python312;
+                packages.pythoneda-shared-runtime-secrets-events-infrastructure-python312;
               python = pkgs.python312;
               pythoneda-shared-pythonlang-banner =
                 pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python312;
@@ -217,7 +217,7 @@
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python312;
               inherit archRole layer org pkgs repo space;
             };
-          pythoneda-runtime-secrets-events-infrastructure-python313 =
+          pythoneda-shared-runtime-secrets-events-infrastructure-python313 =
             shared.devShell-for {
               banner = "${
                   pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python313
@@ -226,7 +226,7 @@
 
               nixpkgs-release = nixpkgsRelease;
               package =
-                packages.pythoneda-runtime-secrets-events-infrastructure-python313;
+                packages.pythoneda-shared-runtime-secrets-events-infrastructure-python313;
               python = pkgs.python313;
               pythoneda-shared-pythonlang-banner =
                 pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python313;
@@ -236,52 +236,52 @@
             };
         };
         packages = rec {
-          default = pythoneda-runtime-secrets-events-infrastructure-python312;
-          pythoneda-runtime-secrets-events-infrastructure-python39 =
-            pythoneda-runtime-secrets-events-infrastructure-for {
+          default = pythoneda-shared-runtime-secrets-events-infrastructure-python312;
+          pythoneda-shared-runtime-secrets-events-infrastructure-python39 =
+            pythoneda-shared-runtime-secrets-events-infrastructure-for {
               python = pkgs.python39;
-              pythoneda-runtime-secrets-events =
-                pythoneda-runtime-secrets-events.packages.${system}.pythoneda-runtime-secrets-events-python39;
+              pythoneda-shared-runtime-secrets-events =
+                pythoneda-shared-runtime-secrets-events.packages.${system}.pythoneda-shared-runtime-secrets-events-python39;
               pythoneda-shared-pythonlang-domain =
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python39;
               pythoneda-shared-pythonlang-infrastructure =
                 pythoneda-shared-pythonlang-infrastructure.packages.${system}.pythoneda-shared-pythonlang-infrastructure-python39;
             };
-          pythoneda-runtime-secrets-events-infrastructure-python310 =
-            pythoneda-runtime-secrets-events-infrastructure-for {
+          pythoneda-shared-runtime-secrets-events-infrastructure-python310 =
+            pythoneda-shared-runtime-secrets-events-infrastructure-for {
               python = pkgs.python310;
-              pythoneda-runtime-secrets-events =
-                pythoneda-runtime-secrets-events.packages.${system}.pythoneda-runtime-secrets-events-python310;
+              pythoneda-shared-runtime-secrets-events =
+                pythoneda-shared-runtime-secrets-events.packages.${system}.pythoneda-shared-runtime-secrets-events-python310;
               pythoneda-shared-pythonlang-domain =
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python310;
               pythoneda-shared-pythonlang-infrastructure =
                 pythoneda-shared-pythonlang-infrastructure.packages.${system}.pythoneda-shared-pythonlang-infrastructure-python310;
             };
-          pythoneda-runtime-secrets-events-infrastructure-python311 =
-            pythoneda-runtime-secrets-events-infrastructure-for {
+          pythoneda-shared-runtime-secrets-events-infrastructure-python311 =
+            pythoneda-shared-runtime-secrets-events-infrastructure-for {
               python = pkgs.python311;
-              pythoneda-runtime-secrets-events =
-                pythoneda-runtime-secrets-events.packages.${system}.pythoneda-runtime-secrets-events-python311;
+              pythoneda-shared-runtime-secrets-events =
+                pythoneda-shared-runtime-secrets-events.packages.${system}.pythoneda-shared-runtime-secrets-events-python311;
               pythoneda-shared-pythonlang-domain =
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python311;
               pythoneda-shared-pythonlang-infrastructure =
                 pythoneda-shared-pythonlang-infrastructure.packages.${system}.pythoneda-shared-pythonlang-infrastructure-python311;
             };
-          pythoneda-runtime-secrets-events-infrastructure-python312 =
-            pythoneda-runtime-secrets-events-infrastructure-for {
+          pythoneda-shared-runtime-secrets-events-infrastructure-python312 =
+            pythoneda-shared-runtime-secrets-events-infrastructure-for {
               python = pkgs.python312;
-              pythoneda-runtime-secrets-events =
-                pythoneda-runtime-secrets-events.packages.${system}.pythoneda-runtime-secrets-events-python312;
+              pythoneda-shared-runtime-secrets-events =
+                pythoneda-shared-runtime-secrets-events.packages.${system}.pythoneda-shared-runtime-secrets-events-python312;
               pythoneda-shared-pythonlang-domain =
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python312;
               pythoneda-shared-pythonlang-infrastructure =
                 pythoneda-shared-pythonlang-infrastructure.packages.${system}.pythoneda-shared-pythonlang-infrastructure-python312;
             };
-          pythoneda-runtime-secrets-events-infrastructure-python313 =
-            pythoneda-runtime-secrets-events-infrastructure-for {
+          pythoneda-shared-runtime-secrets-events-infrastructure-python313 =
+            pythoneda-shared-runtime-secrets-events-infrastructure-for {
               python = pkgs.python313;
-              pythoneda-runtime-secrets-events =
-                pythoneda-runtime-secrets-events.packages.${system}.pythoneda-runtime-secrets-events-python313;
+              pythoneda-shared-runtime-secrets-events =
+                pythoneda-shared-runtime-secrets-events.packages.${system}.pythoneda-shared-runtime-secrets-events-python313;
               pythoneda-shared-pythonlang-domain =
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python313;
               pythoneda-shared-pythonlang-infrastructure =

@@ -1,8 +1,8 @@
 # templates/pyprojecttoml.template
 #
-# This file is the template for pythoneda-runtime/secrets-events-infrastructure's pyproject.toml
+# This file is the template for pythoneda-shared-runtime/secrets-events-infrastructure's pyproject.toml
 #
-# Copyright (C) 2024-today rydnr's pythoneda-runtime-def/secrets-events-infrastructure
+# Copyright (C) 2024-today rydnr's pythoneda-shared-runtime/secrets-events-infrastructure
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ packages = [{include = "@package@"}]
 
 [tool.poetry.dependencies]
 python = "^@pythonMajorMinorVersion@"
-pythoneda-runtime-secrets-events = "^@pythonedaRuntimeSecretsEvents@"
 pythoneda-shared-pythonlang-domain = "^@pythonedaSharedPythonlangDomain@"
+pythoneda-shared-runtime-secrets-events = "^@pythonedaSharedRuntimeSecretsEvents@"
 
 [build-system]
 requires = ["poetry-core"]

@@ -60,36 +60,6 @@
         "type": "github"
       }
     },
-    "pythoneda-runtime-secrets-events": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "pythoneda-shared-pythonlang-banner": [
-          "pythoneda-shared-pythonlang-banner"
-        ],
-        "pythoneda-shared-pythonlang-domain": [
-          "pythoneda-shared-pythonlang-domain"
-        ]
-      },
-      "locked": {
-        "lastModified": 1734006362,
-        "narHash": "sha256-RnGZdyY0hYYyO6j1RYFqwX8+7DYTIFIyEfD+oXa+iVM=",
-        "owner": "pythoneda-runtime-def",
-        "repo": "secrets-events",
-        "rev": "7453cbe5ec2623c7dd4bbc52b434469557ab128e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "pythoneda-runtime-def",
-        "ref": "0.0.1",
-        "repo": "secrets-events",
-        "type": "github"
-      }
-    },
     "pythoneda-shared-pythonlang-banner": {
       "inputs": {
         "flake-utils": [
@@ -172,14 +142,44 @@
         "type": "github"
       }
     },
+    "pythoneda-shared-runtime-secrets-events": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "pythoneda-shared-pythonlang-banner": [
+          "pythoneda-shared-pythonlang-banner"
+        ],
+        "pythoneda-shared-pythonlang-domain": [
+          "pythoneda-shared-pythonlang-domain"
+        ]
+      },
+      "locked": {
+        "lastModified": 1734020603,
+        "narHash": "sha256-y12A7iCDvlLW7Pw1Kw5YWkVT2VKi60AG75fyfRDBC2s=",
+        "owner": "pythoneda-shared-runtime-def",
+        "repo": "secrets-events",
+        "rev": "75fc97345157e5a79738f82a215c4e1fea149b57",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pythoneda-shared-runtime-def",
+        "ref": "0.0.3",
+        "repo": "secrets-events",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
-        "pythoneda-runtime-secrets-events": "pythoneda-runtime-secrets-events",
         "pythoneda-shared-pythonlang-banner": "pythoneda-shared-pythonlang-banner",
         "pythoneda-shared-pythonlang-domain": "pythoneda-shared-pythonlang-domain",
-        "pythoneda-shared-pythonlang-infrastructure": "pythoneda-shared-pythonlang-infrastructure"
+        "pythoneda-shared-pythonlang-infrastructure": "pythoneda-shared-pythonlang-infrastructure",
+        "pythoneda-shared-runtime-secrets-events": "pythoneda-shared-runtime-secrets-events"
       }
     }
   },
